@@ -9,6 +9,134 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String @db.VarChar(50)
+  lastName String @db.VarChar(50)
+  email String @db.VarChar(100)
+  phone String @db.VarChar(10)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @updatedAt
+
+  routes Route[]
+  messages  Message[]  @relation("UserMessages")
+  participants Participant[] @relation("UserParticipants")
+}
+
+enum RiderStatus {
+  PENDING
+  APPROVED
+  CANCELED
+}
+
+model Rider {
+  id Int @id @default(autoincrement())
+  firstName String @db.VarChar(50)
+  lastName String @db.VarChar(50)
+  email String @db.VarChar(100)
+  phone String @db.VarChar(10)
+  profileImage String?
+  citizenId String? @db.VarChar(13)
+  dob DateTime?
+  address String? @db.Text
+  driverLicense String?
+  licensePlate String?
+  verhicleImage String?
+  criminalRecord String?
+  status RiderStatus @default(PENDING)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @updatedAt
+  
+
+  routes Route[]
+  payments Payment[]
+  messages  Message[]  @relation("RiderMessages")
+  participants Participant[] @relation("RiderParticipants")
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+  firstName String @db.VarChar(50)
+  lastName String @db.VarChar(50)
+  email String @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @updatedAt
+
+  messages  Message[]  @relation("AdminMessages")
+  participants Participant[] @relation("AdminParticipants")
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  CANCELED
+  FINISHED
+}
+
+model Route {
+  id Int @id @default(autoincrement())
+  customerId Int
+  status Status @default(PENDING)
+  pickupPlace String
+  pickupLat String
+  pickupLng String
+  desPlace String
+  desLat String
+  desLong String
+  rideFare Float
+  distance Float
+  riderId Int?
+
+  customer User @relation(fields: [customerId], references: [id])
+  rider Rider? @relation(fields: [riderId], references: [id])
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  riderId Int
+  paymentSlip String?
+
+  rider Rider @relation(fields: [riderId], references: [id])
+}
+
+model Conversation {
+  id Int @id @default(autoincrement())
+  participants Participant[]
+  messages Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Participant {
+  id Int @id @default(autoincrement())
+  conversationId Int
+  userId Int?        
+  riderId Int?
+  adminId Int?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  user User? @relation("UserParticipants", fields: [userId], references: [id], map: "Participant_User_fkey")
+  rider Rider? @relation("RiderParticipants", fields: [riderId], references: [id], map: "Participant_Rider_fkey")
+  admin Admin? @relation("AdminParticipants", fields: [adminId], references: [id], map: "Participant_Admin_fkey")
+
+  @@unique([conversationId, userId, riderId, adminId])
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  content String
+  conversationId Int
+  userId Int?        
+  riderId Int?
+  adminId Int?
+  createdAt DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], map: "Message_Conversation_fkey")
+  user User? @relation("UserMessages", fields: [userId], references: [id], map: "Message_User_fkey")
+  rider Rider? @relation("RiderMessages", fields: [riderId], references: [id], map: "Message_Rider_fkey")
+  admin Admin? @relation("AdminMessages", fields: [adminId], references: [id], map: "Message_Admin_fkey")
 }
