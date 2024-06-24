@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -23,9 +18,10 @@ model User {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime? @updatedAt
 
+
+  sentChats Chat[]
   routes Route[]
-  messages  Message[]  @relation("UserMessages")
-  participants Participant[] @relation("UserParticipants")
+
 }
 
 enum RiderStatus {
@@ -53,11 +49,10 @@ model Rider {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime? @updatedAt
   
-
+  sentChats Chat[]
   routes Route[]
   payments Payment[]
-  messages  Message[]  @relation("RiderMessages")
-  participants Participant[] @relation("RiderParticipants")
+
 }
 
 model Admin {
@@ -69,8 +64,8 @@ model Admin {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime? @updatedAt
 
-  messages  Message[]  @relation("AdminMessages")
-  participants Participant[] @relation("AdminParticipants")
+  sentChats Chat[]
+
 }
 
 enum Status {
@@ -108,40 +103,37 @@ model Payment {
   rider Rider @relation(fields: [riderId], references: [id])
 }
 
-model Conversation {
-  id Int @id @default(autoincrement())
-  participants Participant[]
-  messages Message[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
-model Participant {
-  id Int @id @default(autoincrement())
-  conversationId Int
-  userId Int?        
-  riderId Int?
-  adminId Int?
 
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-  user User? @relation("UserParticipants", fields: [userId], references: [id], map: "Participant_User_fkey")
-  rider Rider? @relation("RiderParticipants", fields: [riderId], references: [id], map: "Participant_Rider_fkey")
-  admin Admin? @relation("AdminParticipants", fields: [adminId], references: [id], map: "Participant_Admin_fkey")
 
-  @@unique([conversationId, userId, riderId, adminId])
+
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  userId    Int?
+  riderId   Int?
+  adminId   Int?
+  senderBy  String?
+  createdAt DateTime  @default(now())
+  user      User?     @relation(fields: [userId], references: [id])
+  rider     Rider?    @relation(fields: [riderId], references: [id])
+  admin     Admin?    @relation(fields: [adminId], references: [id])
+  messages  Message[]
 }
 
 model Message {
-  id Int @id @default(autoincrement())
-  content String
-  conversationId Int
-  userId Int?        
-  riderId Int?
-  adminId Int?
-  createdAt DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], map: "Message_Conversation_fkey")
-  user User? @relation("UserMessages", fields: [userId], references: [id], map: "Message_User_fkey")
-  rider Rider? @relation("RiderMessages", fields: [riderId], references: [id], map: "Message_Rider_fkey")
-  admin Admin? @relation("AdminMessages", fields: [adminId], references: [id], map: "Message_Admin_fkey")
+  id         Int      @id @default(autoincrement())
+  chatId     Int
+  senderRole String
+  content    String
+  createdAt  DateTime @default(now())
+  chat       Chat     @relation(fields: [chatId], references: [id])
 }
+
+
+
+
+
+
+
+
