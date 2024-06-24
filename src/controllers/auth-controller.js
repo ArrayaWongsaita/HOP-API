@@ -1,5 +1,6 @@
 const hashService = require("../services/hash-service");
 const jwtService = require("../services/jwt-service");
+const riderService = require("../services/rider-service");
 const userService = require("../services/user-service");
 const checkRole = require("../utils/check-role");
 
@@ -8,12 +9,15 @@ const authController = {};
 authController.register = async (req, res, next) => {
   try {
     // For customer registration
-    if (req.role === "customer") {
-      const data = req.body;
+    if (req.body.role === "customer") {
+      const data = req.input;
 
-      const existedCustomer = userService.findCustomerByEmailOrPhone(
-        data.email || data.phone
+      const existedCustomer = await userService.findCustomerByEmailAndPhone(
+        data.email,
+        data.phone
       );
+
+      console.log(existedCustomer);
 
       if (existedCustomer) {
         res
@@ -24,14 +28,16 @@ authController.register = async (req, res, next) => {
       data.password = await hashService.hash(data.password);
 
       await userService.createCustomer(data);
+      res.status(200).json({ message: "User created" });
     }
 
     // For rider register
-    if (req.role === "rider") {
-      const data = req.body;
+    if (req.body.role === "rider") {
+      const data = req.input;
 
-      const existedRider = userService.findRiderByEmailOrPhone(
-        data.email || data.phone
+      const existedRider = await riderService.findRiderByEmailAndPhone(
+        data.email,
+        data.phone
       );
 
       if (existedRider) {
@@ -42,10 +48,9 @@ authController.register = async (req, res, next) => {
 
       data.password = await hashService.hash(data.password);
 
-      await userService.createRider(data);
+      await riderService.createRider(data);
+      res.status(200).json({ message: "User created" });
     }
-
-    res.status(200).json({ message: "User created" });
   } catch (error) {
     next(error);
   }
@@ -54,7 +59,7 @@ authController.register = async (req, res, next) => {
 authController.login = async (req, res, next) => {
   try {
     // Customer login
-    if (req.role === "customer") {
+    if (req.body.role === "customer") {
       const data = req.input;
       const existedCustomer = await userService.findCustomerByEmailOrPhone(
         data.emailOrPhone
@@ -76,7 +81,7 @@ authController.login = async (req, res, next) => {
       const accessToken = jwtService.sign({
         user: { id: existedCustomer.id, role: "customer" },
       });
-      return accessToken;
+      return res.status(200).json(accessToken);
     }
 
     // Rider or Admin login
@@ -86,7 +91,7 @@ authController.login = async (req, res, next) => {
       const userRole = await checkRole(data.emailOrPhone);
 
       if (!userRole) {
-        return res.status(400).json({ msg: "Invalid Credentials" });
+        return res.status(400).json({ message: "invalid credentials" });
       }
 
       const { user, role } = userRole;
@@ -100,10 +105,8 @@ authController.login = async (req, res, next) => {
       const accessToken = jwtService.sign({
         user: { id: user.id, role: role },
       });
-      return accessToken;
+      return res.status(200).json(accessToken);
     }
-
-    res.status(200).json({ accessToken });
   } catch (error) {
     next(error);
   }

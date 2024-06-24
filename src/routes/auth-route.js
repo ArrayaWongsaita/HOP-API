@@ -11,29 +11,35 @@ const authRouter = express.Router();
 authRouter.post(
   "/register/customer",
   validation.registerValidation,
-  (req, res) => {
+  (req, res, next) => {
     req.body.role = "customer";
-    authController.register;
-  }
+    next();
+  },
+  authController.register
 );
 
 // Rider register
 authRouter.post(
   "/register/rider",
   validation.registerValidation,
-  (req, res) => {
+  (req, res, next) => {
     req.body.role = "rider";
-    authController.register;
-  }
+    next();
+  },
+  authController.register
 );
 
 // LOGIN for different roles
 
 // Customer login
-authRouter.post("/login/customer", validation.loginValidation, (req, res) => {
-  req.body.role = "customer";
-  authController.login;
-});
+authRouter.post(
+  "/login/customer",
+  validation.loginValidation,
+  (req, res, next) => {
+    (req.body.role = "customer"), next();
+  },
+  authController.login
+);
 
 // Rider OR Admin login
 authRouter.post(

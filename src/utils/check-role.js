@@ -1,10 +1,11 @@
 const prisma = require("../models/prisma");
-const userService = require("../services/user-service");
+const adminService = require("../services/admin-service");
+const riderService = require("../services/rider-service");
 
 const checkRole = async (emailOrPhone) => {
-  const rider = await userService.findRiderByEmailOrPhone(emailOrPhone);
+  const rider = await riderService.findRiderByEmailOrPhone(emailOrPhone);
   if (!rider) {
-    const admin = await userService.findAdminByEmailOrPhone(emailOrPhone);
+    const admin = await adminService.findAdminByEmailOrPhone(emailOrPhone);
     if (!admin) {
       return null;
     }

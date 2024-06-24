@@ -1,4 +1,6 @@
+const adminService = require("../services/admin-service");
 const jwtService = require("../services/jwt-service");
+const riderService = require("../services/rider-service");
 const userService = require("../services/user-service");
 
 const authenticate = async (req, res, next) => {
@@ -25,7 +27,7 @@ const authenticate = async (req, res, next) => {
 
     // Check if rider
     if (payload.user.role === "rider") {
-      const user = await userService.findRiderById(payload.user.id);
+      const user = await riderService.findRiderById(payload.user.id);
       if (!user) {
         res.status(400).json({ message: "user not found" });
       }
@@ -38,7 +40,7 @@ const authenticate = async (req, res, next) => {
 
     // Check if admin
     if (payload.user.role === "admin") {
-      const user = await userService.findAdminById(payload.user.id);
+      const user = await adminService.findAdminById(payload.user.id);
       if (!user) {
         res.status(400).json({ message: "user not found" });
       }

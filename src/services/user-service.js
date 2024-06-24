@@ -6,10 +6,18 @@ userService.createCustomer = (customerData) => {
   return prisma.user.create({ data: customerData });
 };
 
+userService.findCustomerByEmailAndPhone = (email, phone) => {
+  return prisma.user.findFirst({
+    where: {
+      OR: [{ email: email }, { phone: phone }],
+    },
+  });
+};
+
 userService.findCustomerByEmailOrPhone = (emailOrPhone) => {
   return prisma.user.findFirst({
     where: {
-      OR: [{ email: emailOrPhone }, { mobile: emailOrPhone }],
+      OR: [{ email: emailOrPhone }, { phone: emailOrPhone }],
     },
   });
 };
@@ -18,32 +26,8 @@ userService.findCustomerById = (id) => {
   return prisma.user.findFirst({ where: { id } });
 };
 
-userService.createRider = (riderData) => {
-  return prisma.rider.create({ data: riderData });
-};
-
-userService.findRiderByEmailOrPhone = (emailOrPhone) => {
-  return prisma.rider.findFirst({
-    where: {
-      OR: [{ email: emailOrPhone }, { phone: emailOrPhone }],
-    },
-  });
-};
-
-userService.findRiderById = (id) => {
-  return prisma.rider.findFirst({ where: { id } });
-};
-
-userService.findAdminByEmailOrPhone = (emailOrPhone) => {
-  return prisma.admin.findFirst({
-    where: {
-      OR: [{ email: emailOrPhone }, { mobile: emailOrPhone }],
-    },
-  });
-};
-
-userService.findAdminById = (id) => {
-  return prisma.admin.findFirst({ where: { id } });
+userService.updateUserData = (id, data) => {
+  return prisma.user.update({ where: id, data });
 };
 
 module.exports = userService;
