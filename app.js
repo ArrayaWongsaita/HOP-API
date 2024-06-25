@@ -6,6 +6,7 @@ const authRouter = require("./src/routes/auth-route");
 const customerRouter = require("./src/routes/customer-route");
 const routeRouter = require("./src/routes/route-route");
 const errorMiddleware = require("./src/middlewares/error");
+const chatRoute = require("./src/routes/chat-route");
 
 const app = express();
 
@@ -19,4 +20,8 @@ app.use("/route", routeRouter);
 
 app.use(errorMiddleware);
 
-module.exports = app;
+const socketIO = (io, socket) => {
+  chatRoute(socket, io);
+};
+
+module.exports = { app, socketIO };
