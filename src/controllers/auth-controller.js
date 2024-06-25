@@ -81,7 +81,7 @@ authController.login = async (req, res, next) => {
       const accessToken = jwtService.sign({
         user: { id: existedCustomer.id, role: "customer" },
       });
-      return res.status(200).json(accessToken);
+      return res.status(200).json({ accessToken });
     }
 
     // Rider or Admin login
@@ -105,7 +105,7 @@ authController.login = async (req, res, next) => {
       const accessToken = jwtService.sign({
         user: { id: user.id, role: role },
       });
-      return res.status(200).json(accessToken);
+      return res.status(200).json({ accessToken });
     }
   } catch (error) {
     next(error);

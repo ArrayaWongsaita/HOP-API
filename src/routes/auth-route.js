@@ -36,7 +36,8 @@ authRouter.post(
   "/login/customer",
   validation.loginValidation,
   (req, res, next) => {
-    (req.body.role = "customer"), next();
+    req.body.role = "customer";
+    next();
   },
   authController.login
 );
