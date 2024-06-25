@@ -61,4 +61,24 @@ routeController.finishRoute = async (req, res, next) => {
   }
 };
 
+routeController.getAllRoute = async (req, res, next) => {
+  try {
+    const allRoutes = await routeService.getAllRoute();
+    res.status(200).json(allRoutes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+routeController.cancelRoute = async (req, res, next) => {
+  const routeId = parseInt(req.params.routeId);
+
+  try {
+    const canceledRoute = await routeService.cancelRoute(routeId);
+    res.status(200).json(canceledRoute);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = routeController;

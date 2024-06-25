@@ -4,7 +4,9 @@ const routeController = require("../controllers/route-controller");
 const routeRouter = express.Router();
 
 routeRouter.post("/:customerId", routeController.newRoute);
-routeRouter.get("/", (req, res) => {});
-routeRouter.patch("/:riderId", routeController.acceptRoute);
-routeRouter.patch("/:routeId", (req, res) => {});
-routeRouter.delete("/:routeId", (req, res) => {});
+routeRouter.get("/all", routeController.getAllRoute);
+routeRouter.patch("/rider/accept/:riderId", routeController.acceptRoute);
+routeRouter.patch("/rider/finish:riderId", routeController.finishRoute);
+routeRouter.patch("customer/:routeId", routeController.cancelRoute);
+
+module.exports = routeRouter;

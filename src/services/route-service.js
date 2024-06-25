@@ -19,4 +19,15 @@ routeService.finishRoute = (routeId) => {
   });
 };
 
+routeService.getAllRoute = () => {
+  return prisma.route.findMany();
+};
+
+routeService.cancelRoute = (routeId) => {
+  return prisma.route.update({
+    where: { id: routeId },
+    data: { status: CANCELED },
+  });
+};
+
 module.exports = routeService;
