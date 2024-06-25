@@ -44,7 +44,7 @@ model Rider {
   address String? @db.Text
   driverLicense String?
   licensePlate String?
-  verhicleImage String?
+  vehicleImage String?
   status RiderStatus @default(PENDING)
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime? @updatedAt
@@ -59,7 +59,7 @@ model Admin {
   id Int @id @default(autoincrement())
   firstName String @db.VarChar(50)
   lastName String @db.VarChar(50)
-  passsword String @db.VarChar(100)
+  password String @db.VarChar(100)
   email String @db.VarChar(100)
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime? @updatedAt
@@ -84,9 +84,10 @@ model Route {
   pickupLng String
   desPlace String
   desLat String
-  desLong String
+  desLng String
   rideFare Float
   distance Float
+  estTime Int
   riderId Int?
 
   customer User @relation(fields: [customerId], references: [id])
