@@ -16,12 +16,13 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/customer", customerRouter);
-app.use("/route", routeRouter);
+// app.use("/route", routeRouter);
 
 app.use(errorMiddleware);
 
 const socketIO = (io, socket) => {
   chatRoute(socket, io);
+  routeRouter(socket, io);
 };
 
 module.exports = { app, socketIO };
