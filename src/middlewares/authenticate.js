@@ -22,7 +22,7 @@ const authenticate = async (req, res, next) => {
 
       req.user = user;
 
-      next();
+      return next();
     }
 
     // Check if rider
@@ -35,7 +35,7 @@ const authenticate = async (req, res, next) => {
 
       req.user = user;
 
-      next();
+    return  next();
     }
 
     // Check if admin
@@ -47,7 +47,7 @@ const authenticate = async (req, res, next) => {
       delete user.password;
 
       req.user = user;
-      next();
+    return  next();
     }
     res.status(400).json({ message: "user not found" });
   } catch (error) {
