@@ -1,83 +1,84 @@
+const { Socket } = require("socket.io");
 const routeService = require("../services/route-service");
 
 const routeController = {};
 
-routeController.newRoute = async (req, res, next) => {
-  const customerId = parseInt(req.params.customerId);
-  const data = req.body;
-
-  // data = {locationA: {lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
-  const {
-    locationA: { pickupPlace, pickupLat, pickupLng },
-    locationB: { desPlace, desLat, desLng },
-    distance,
-    estTime,
-    rideFare,
-  } = data;
-
-  const routeInfo = {
-    customerId,
-    pickupPlace,
-    pickupLat,
-    pickupLng,
-    desPlace,
-    desLat,
-    desLng,
-    distance,
-    estTime,
-    rideFare,
-  };
+routeController.newRoute = async (socket, data) => {
+  // const customerId = parseInt(req.params.customerId);
+  // const data = req.body;
 
   try {
+    // data = {userId, locationA: {lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
+    const {
+      customerId,
+      locationA: { pickupPlace, pickupLat, pickupLng },
+      locationB: { desPlace, desLat, desLng },
+      distance,
+      estTime,
+      rideFare,
+    } = data;
+
+    const routeInfo = {
+      customerId,
+      pickupPlace,
+      pickupLat,
+      pickupLng,
+      desPlace,
+      desLat,
+      desLng,
+      distance,
+      estTime,
+      rideFare,
+    };
+    // create new channel for new ride request
     const newRoute = await routeService.createNewRoute(routeInfo);
-    res.status(200).json(newRoute.id);
+    socket.join(`route_${newRoute.id}`);
+    socket.emit("routeHistory", newRoute);
   } catch (error) {
-    next(error);
+    console.log(error);
   }
 };
 
-routeController.acceptRoute = async (req, res, next) => {
-  const riderId = parseInt(req.params.riderId);
-  const data = req.body;
-  // data = {routeId: 1}
-  const routeId = parseInt(data.routeId);
+routeController.cancelRoute = async (socket, routeId) => {
+  // const routeId = parseInt(req.params.routeId);
+  try {
+    const canceledRoute = await routeService.cancelRoute(routeId);
+    socket.to(`route_${routeId}`).emit("routeHistory", canceledRoute);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+routeController.acceptRoute = async (io, socket, routeId, riderId) => {
+  // const riderId = parseInt(req.params.riderId);
+  // const data = req.body;
+  // const routeId = parseInt(data.routeId);
 
   try {
     const acceptedRoute = await routeService.acceptRoute(routeId, riderId);
-    res.status(200).json(acceptedRoute);
+    io.to(`route_${routeId}`).emit("routeHistory", acceptedRoute);
   } catch (error) {
-    next(error);
+    console.log(error);
   }
 };
 
-routeController.finishRoute = async (req, res, next) => {
-  const routeId = parseInt(req.params.routeId);
-  const data = req.body;
-  // data = {routeId: 1}
+routeController.finishRoute = async (io, socket, routeId) => {
+  // const routeId = parseInt(req.params.routeId);
+  // const data = req.body;
   try {
     const finishedRoute = await routeService.finishRoute(routeId);
+    io.to(`route_${routeId}`).emit("routeHistory", finishedRoute);
   } catch (error) {
     next(error);
   }
 };
 
-routeController.getAllRoute = async (req, res, next) => {
+routeController.getAllRoute = async (socket) => {
   try {
     const allRoutes = await routeService.getAllRoute();
-    res.status(200).json(allRoutes);
+    socket.emit("routeList", allRoutes);
   } catch (error) {
-    next(error);
-  }
-};
-
-routeController.cancelRoute = async (req, res, next) => {
-  const routeId = parseInt(req.params.routeId);
-
-  try {
-    const canceledRoute = await routeService.cancelRoute(routeId);
-    res.status(200).json(canceledRoute);
-  } catch (error) {
-    next(error);
+    console.log(error);
   }
 };
 
