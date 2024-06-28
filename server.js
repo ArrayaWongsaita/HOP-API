@@ -1,7 +1,7 @@
 require("dotenv").config();
 const socketio = require("socket.io");
 const { app, socketIO } = require("./app.js");
-const socketRoute = require("./src/routes/socket-route.js");
+// const socketRoute = require("./src/routes/socket-route.js");
 
 const PORT = process.env.PORT || 8000;
 const expressServer = app.listen(PORT, () =>

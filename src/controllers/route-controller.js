@@ -3,13 +3,14 @@ const routeService = require("../services/route-service");
 
 const routeController = {};
 
-routeController.newRoute = async (socket, customerId, data) => {
+routeController.newRoute = async (socket, data) => {
   // const customerId = parseInt(req.params.customerId);
   // const data = req.body;
 
   try {
-    // data = {locationA: {lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
+    // data = {userId, locationA: {lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
     const {
+      customerId,
       locationA: { pickupPlace, pickupLat, pickupLng },
       locationB: { desPlace, desLat, desLng },
       distance,
