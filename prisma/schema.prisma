@@ -89,6 +89,7 @@ model Route {
   distance Float
   estTime Int
   riderId Int?
+  pickupTime Int?
 
   customer User @relation(fields: [customerId], references: [id])
   rider Rider? @relation(fields: [riderId], references: [id])

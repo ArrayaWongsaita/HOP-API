@@ -48,13 +48,19 @@ routeController.cancelRoute = async (socket, routeId) => {
   }
 };
 
-routeController.acceptRoute = async (io, socket, routeId, riderId) => {
+routeController.acceptRoute = async (io, socket, routeId, data) => {
   // const riderId = parseInt(req.params.riderId);
   // const data = req.body;
   // const routeId = parseInt(data.routeId);
 
   try {
-    const acceptedRoute = await routeService.acceptRoute(routeId, riderId);
+    const riderId = data.riderId;
+    const pickupTime = data.pickupTime;
+    const acceptedRoute = await routeService.acceptRoute(
+      routeId,
+      riderId,
+      pickupTime
+    );
     io.to(`route_${routeId}`).emit("routeHistory", acceptedRoute);
   } catch (error) {
     console.log(error);
