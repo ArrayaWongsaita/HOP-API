@@ -16,11 +16,7 @@ const io = socketio(expressServer, {
     methods: ["GET", "POST"],
   },
 });
+
 io.on("connection", (socket) => {
-  // console.log("socket--------")
-  socket.onAny((event, ...args) => {
-    console.log(`Received event: ${event}`);
-    console.log("With arguments:", args);
-  });
-  socketIO(io, socket);
+  socketIO(socket,io);
 });

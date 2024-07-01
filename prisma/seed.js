@@ -117,10 +117,13 @@ async function main() {
         riderId: 1,
         paymentSlip: 'path/to/payment_slip1.jpg',
         approvedAt: new Date(),
+        expiredDate: new Date('2024-07-11'),
       },
       {
         riderId: 2,
         paymentSlip: 'path/to/payment_slip2.jpg',
+        approvedAt: new Date(),
+        expiredDate: new Date('2024-07-15'),
       },
     ],
   });

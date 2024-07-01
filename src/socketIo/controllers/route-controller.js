@@ -1,5 +1,4 @@
-const { Socket } = require("socket.io");
-const routeService = require("../services/route-service");
+const routeService = require("../../services/route-service");
 
 const routeController = {};
 
