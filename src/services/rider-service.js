@@ -26,4 +26,10 @@ riderService.findRiderById = (id) => {
   return prisma.rider.findFirst({ where: { id } });
 };
 
+riderService.findLatestSlipByRiderId = (riderId) => prisma.payment.findMany({
+  where: {riderId},
+  orderBy: {id:'desc'},
+  take: 1
+})
+
 module.exports = riderService;

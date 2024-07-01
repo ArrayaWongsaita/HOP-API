@@ -1,6 +1,5 @@
-const { Socket } = require("socket.io");
-const chatService = require("../services/chat-service");
-const { date } = require("joi");
+const chatService = require("../../services/chat-service");
+
 
 const chatController = {};
 //====================== JOIN CHAT =======================
