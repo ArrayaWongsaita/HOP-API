@@ -5,10 +5,10 @@ routeService.createNewRoute = (routeInfo) => {
   return prisma.route.create({ data: routeInfo });
 };
 
-routeService.acceptRoute = (routeId, riderId) => {
+routeService.acceptRoute = (routeId, riderId, pickupTime) => {
   return prisma.route.update({
     where: { id: routeId },
-    data: { riderId: riderId, status: ACCEPTED },
+    data: { riderId: riderId, status: ACCEPTED, pickupTime: pickupTime },
   });
 };
 
