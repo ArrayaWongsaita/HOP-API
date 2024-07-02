@@ -8,25 +8,25 @@ routeService.createNewRoute = (routeInfo) => {
 routeService.acceptRoute = (routeId, riderId, pickupTime) => {
   return prisma.route.update({
     where: { id: routeId },
-    data: { riderId: riderId, status: ACCEPTED, pickupTime: pickupTime },
+    data: { riderId: riderId, status: "ACCEPTED", pickupTime: pickupTime },
   });
 };
 
 routeService.finishRoute = (routeId) => {
   return prisma.route.update({
     where: { id: routeId },
-    data: { status: FINISHED },
+    data: { status: "FINISHED" },
   });
 };
 
 routeService.getAllRoute = () => {
-  return prisma.route.findMany({ where: { status: PENDING } });
+  return prisma.route.findMany({ where: { status: "PENDING" } });
 };
 
 routeService.cancelRoute = (routeId) => {
   return prisma.route.update({
     where: { id: routeId },
-    data: { status: CANCELED },
+    data: { status: "CANCELED" },
   });
 };
 

@@ -85,7 +85,7 @@ routeController.finishRoute = async (io, socket, routeId) => {
 routeController.getAllRoute = async (socket) => {
   try {
     const allRoutes = await routeService.getAllRoute();
-    return allRoutes;
+    socket.emit("routeList", allRoutes);
   } catch (error) {
     console.log(error);
   }
