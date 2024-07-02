@@ -9,8 +9,6 @@ const chatRoute = require("./src/socketIo/routes/chat-route");
 const routeRoute = require("./src/socketIo/routes/route-route");
 const riderRouter = require("./src/routes/rider-route");
 
-
-
 const app = express();
 
 app.use(cors());
@@ -19,17 +17,17 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/customer", customerRouter);
-app.use('/rider',riderRouter)
+app.use("/rider", riderRouter);
 // app.use("/route", routeRouter);
 
 app.use(errorMiddleware);
 
-const socketIO = (socket ,io) => {
-    // console.log("socket--------")
-    socket.onAny((event, ...args) => {
-      console.log(`Received event: ${event}`);
-      console.log("With arguments:", args);
-    });
+const socketIO = (socket, io) => {
+  // console.log("socket--------")
+  socket.onAny((event, ...args) => {
+    console.log(`Received event: ${event}`);
+    console.log("With arguments:", args);
+  });
 
   chatRoute(socket, io);
   routeRoute(socket, io);
