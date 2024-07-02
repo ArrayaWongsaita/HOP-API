@@ -22,8 +22,8 @@ module.exports = routeRouter = (socket, io) => {
   });
 
   // confirm ride by rider
-  socket.on("confirmRoute", (routeId, riderId) => {
-    routeController.acceptRoute(io, socket, routeId, riderId);
+  socket.on("confirmRoute", (routeId, data) => {
+    routeController.acceptRoute(io, socket, routeId, data);
   });
 
   // finish confirmation by rider
