@@ -2,7 +2,7 @@ const routeService = require("../../services/route-service");
 
 const routeController = {};
 
-routeController.newRoute = async (socket, data) => {
+routeController.newRoute = async (io, socket, data) => {
   // const customerId = parseInt(req.params.customerId);
   // const data = req.body;
 
@@ -31,8 +31,12 @@ routeController.newRoute = async (socket, data) => {
     };
     // create new channel for new ride request
     const newRoute = await routeService.createNewRoute(routeInfo);
+    // create route room
     socket.join(`route_${newRoute.id}`);
-    socket.emit("routeHistory", newRoute);
+    // sending route info to show in customer side
+    io.to(`route_${newRoute.id}`).emit("routeHistory", newRoute);
+    return newRoute;
+    // socket.emit("routeHistory", newRoute);
   } catch (error) {
     console.log(error);
   }
@@ -81,7 +85,7 @@ routeController.finishRoute = async (io, socket, routeId) => {
 routeController.getAllRoute = async (socket) => {
   try {
     const allRoutes = await routeService.getAllRoute();
-    socket.emit("routeList", allRoutes);
+    return allRoutes;
   } catch (error) {
     console.log(error);
   }

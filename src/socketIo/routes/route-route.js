@@ -13,7 +13,8 @@ module.exports = routeRouter = (socket, io) => {
   // create new route by customer
   socket.on("newRoute", (routeInfo) => {
     console.log(routeInfo);
-    routeController.newRoute(socket, routeInfo);
+    routeController.newRoute(io, socket, routeInfo);
+    io.emit("newRouteRequest", newRoute);
   });
 
   // cancel ride request by customer
@@ -22,7 +23,7 @@ module.exports = routeRouter = (socket, io) => {
   });
 
   // confirm ride by rider
-  socket.on("confirmRoute", (routeId, data) => {
+  socket.on("acceptRoute", (routeId, data) => {
     routeController.acceptRoute(io, socket, routeId, data);
   });
 
@@ -34,5 +35,6 @@ module.exports = routeRouter = (socket, io) => {
   // get all ride request
   socket.on("allRoutes", () => {
     routeController.getAllRoute(socket);
+    socket.emit("routeList", allRoutes);
   });
 };
