@@ -27,4 +27,13 @@ riderController.getInfoRider = async (req, res, next) => {
   }
 };
 
+riderController.availableRider = async (req, res, next) => {
+  try {
+    const allAvailableRiders = await riderService.findAvailableRider();
+    res.status(200).json(allAvailableRiders);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = riderController;

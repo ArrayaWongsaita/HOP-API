@@ -20,7 +20,7 @@ routeService.finishRoute = (routeId) => {
 };
 
 routeService.getAllRoute = () => {
-  return prisma.route.findMany();
+  return prisma.route.findMany({ where: { status: PENDING } });
 };
 
 routeService.cancelRoute = (routeId) => {
