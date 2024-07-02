@@ -34,7 +34,6 @@ module.exports = routeRouter = (socket, io) => {
 
   // get all ride request
   socket.on("allRoutes", () => {
-    routeController.getAllRoute(socket);
-    socket.emit("routeList", allRoutes);
+     routeController.getAllRoute(socket);
   });
 };
