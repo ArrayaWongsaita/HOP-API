@@ -7,15 +7,18 @@ routeController.newRoute = async (io, socket, data) => {
   // const data = req.body;
 
   try {
-    // data = {userId, locationA: {lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
-    const {
-      customerId,
-      locationA: { pickupPlace, pickupLat, pickupLng },
-      locationB: { desPlace, desLat, desLng },
-      distance,
-      estTime,
-      rideFare,
-    } = data;
+    // data = {userId, locationA: {description, lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
+
+    const customerId = data.customerId;
+    const pickupPlace = data.locationA.description;
+    const pickupLat = toString(data.locationA.lat);
+    const pickupLng = toString(data.locationA.lng);
+    const desPlace = data.locationB.description;
+    const desLat = toString(data.locationB.lat);
+    const desLng = toString(data.locationB.lng);
+    const distance = parseFloat(data.distanceInKm);
+    const estTime = parseInt(data.durationInMinutes);
+    const rideFare = parseFloat(data.fare);
 
     const routeInfo = {
       customerId,
