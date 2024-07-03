@@ -15,7 +15,8 @@ riderRouter.post(
     { name: "profileImage", maxCount: 1 },
     { name: "vehicleImage", maxCount: 1 },
     { name: "vehicleRegistrationImage", maxCount: 1 },
-  ])
+  ]),
+  riderController.verifyRequest
 );
 
 module.exports = riderRouter;
