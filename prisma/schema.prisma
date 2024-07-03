@@ -71,6 +71,10 @@ model Admin {
 enum Status {
   PENDING
   ACCEPTED
+  GOING
+  PICKEDUP
+  OTW
+  ARRIVED
   CANCELED
   FINISHED
 }
