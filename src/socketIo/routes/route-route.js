@@ -12,9 +12,8 @@ const routeController = require("../controllers/route-controller");
 module.exports = routeRouter = (socket, io) => {
   // create new route by customer
   socket.on("newRoute", (routeInfo) => {
-    console.log(routeInfo);
     routeController.newRoute(io, socket, routeInfo);
-    io.emit("newRouteRequest", newRoute);
+
   });
 
   // cancel ride request by customer

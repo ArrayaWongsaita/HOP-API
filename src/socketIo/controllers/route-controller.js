@@ -9,36 +9,39 @@ routeController.newRoute = async (io, socket, data) => {
   try {
     // data = {userId, locationA: {description, lat, lng}, locationB: {description, lat, lng}, distanceInKm: 1.8, durationInMinutes: 7, fare: 30}
 
-    const customerId = data.customerId;
-    const pickupPlace = data.locationA.description;
-    const pickupLat = toString(data.locationA.lat);
-    const pickupLng = toString(data.locationA.lng);
-    const desPlace = data.locationB.description;
-    const desLat = toString(data.locationB.lat);
-    const desLng = toString(data.locationB.lng);
-    const distance = parseFloat(data.distanceInKm);
-    const estTime = parseInt(data.durationInMinutes);
-    const rideFare = parseFloat(data.fare);
+    // const customerId = data.customerId;
+    // const pickupPlace = data.locationA.description;
+    // const pickupLat = toString(data.locationA.lat);
+    // const pickupLng = toString(data.locationA.lng);
+    // const desPlace = data.locationB.description;
+    // const desLat = toString(data.locationB.lat);
+    // const desLng = toString(data.locationB.lng);
+    // const distance = parseFloat(data.distanceInKm);
+    // const estTime = parseInt(data.durationInMinutes);
+    // const rideFare = parseFloat(data.fare);
+
 
     const routeInfo = {
-      customerId,
-      pickupPlace,
-      pickupLat,
-      pickupLng,
-      desPlace,
-      desLat,
-      desLng,
-      distance,
-      estTime,
-      rideFare,
+       customerId : data.userId,
+       pickupPlace : data.locationA.description,
+       pickupLat : data.locationA.lat+"",
+       pickupLng : data.locationA.lng+"",
+       desPlace : data.locationB.description,
+       desLat : data.locationB.lat+"",
+       desLng : data.locationB.lng+"",
+       distance : parseFloat(data.distanceInKm),
+       estTime : parseInt(data.durationInMinutes),
+       rideFare : parseFloat(data.fare),
     };
     // create new channel for new ride request
     const newRoute = await routeService.createNewRoute(routeInfo);
+    console.log(newRoute)
     // create route room
     socket.join(`route_${newRoute.id}`);
     // sending route info to show in customer side
     io.to(`route_${newRoute.id}`).emit("routeHistory", newRoute);
-    return newRoute;
+    io.emit("newRouteRequest", newRoute);
+
     // socket.emit("routeHistory", newRoute);
   } catch (error) {
     console.log(error);
