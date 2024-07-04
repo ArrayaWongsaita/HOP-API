@@ -1,6 +1,7 @@
 const fs = require("fs");
 const riderService = require("../services/rider-service");
 const uploadService = require("../services/upload-service");
+const paymentService = require("../services/payment-service");
 
 const riderController = {};
 
@@ -86,6 +87,37 @@ riderController.verifyRequest = async (req, res, next) => {
       verifyData
     );
     res.status(200).json(submittedData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+riderController.createPayment = async (req, res, next) => {
+  try {
+    // req = {riderId, paymentSlip}
+
+    const riderId = parseInt(req.user.id); // authenticate
+
+    const uploadFile = async (file) => {
+      const filePath = file.path;
+      const cloudinaryUrl = await uploadService.upload(filePath);
+      fs.unlink(filePath, (error) => {
+        if (error) {
+          console.error("Error deleting file:", filePath, error);
+        }
+      }); // Delete the local file
+      return cloudinaryUrl;
+    };
+
+    const paymentSlipUrl = await uploadFile(req.file.path);
+    const paymentInfo = {
+      riderId: riderId,
+      paymentSlip: paymentSlipUrl,
+    };
+
+    const createdPayment = await paymentService.createPayment(paymentInfo);
+
+    res.status(200).json(createdPayment);
   } catch (error) {
     next(error);
   }

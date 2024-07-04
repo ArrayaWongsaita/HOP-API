@@ -63,4 +63,17 @@ riderService.submitVerification = (riderId, data) => {
   });
 };
 
+riderService.getPendingRider = () => {
+  return prisma.rider.findMany({
+    where: { status: "SUBMITTED" },
+  });
+};
+
+riderService.approveStatus = (riderId) => {
+  return prisma.rider.update({
+    where: { id: riderId },
+    data: { status: "APPROVED" },
+  });
+};
+
 module.exports = riderService;

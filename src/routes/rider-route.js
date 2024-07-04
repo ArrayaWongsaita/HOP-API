@@ -21,4 +21,11 @@ riderRouter.post(
   riderController.verifyRequest
 );
 
+riderRouter.post(
+  "/payment",
+  authenticate,
+  upload.single("paymentSlip"),
+  riderController.createPayment
+);
+
 module.exports = riderRouter;

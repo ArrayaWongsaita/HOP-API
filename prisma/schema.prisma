@@ -28,6 +28,7 @@ enum RiderStatus {
   PENDING
   SUBMITTED
   APPROVED
+  SUBSCRIBED
   CANCELED
 }
 
