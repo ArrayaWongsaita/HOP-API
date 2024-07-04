@@ -13,26 +13,39 @@ module.exports = routeRouter = (socket, io) => {
   // create new route by customer
   socket.on("newRoute", (routeInfo) => {
     routeController.newRoute(io, socket, routeInfo);
-
   });
 
   // cancel ride request by customer
-  socket.on("cancelRoute", (routeId) => {
-    routeController.cancelRoute(socket, routeId);
+  socket.on("cancelRoute", ({ routeId }) => {
+    routeController.cancelRoute(io, socket, routeId);
   });
 
   // confirm ride by rider
-  socket.on("acceptRoute", (routeId, data) => {
-    routeController.acceptRoute(io, socket, routeId, data);
+  socket.on("acceptRoute", (data) => {
+    routeController.acceptRoute(io, socket, data);
   });
 
   // finish confirmation by rider
-  socket.on("finishRoute", (routeId) => {
-    routeController.finishRoute(io, socket, routeId, riderId);
+  socket.on("finishRoute", ({ routeId }) => {
+    routeController.finishRoute(io, socket, routeId);
+  });
+
+  socket.on("updateRouteStatus", (data) => {
+    console.log("data = ", data);
+    routeController.updateRouteStatus(io, data);
   });
 
   // get all ride request
   socket.on("allRoutes", () => {
-     routeController.getAllRoute(socket);
+    routeController.getAllRoute(socket);
+  });
+
+  socket.on("requestRouteHistory", ({ routeId }) => {
+    routeController.requestRouteHistory(socket, routeId);
+  });
+
+  socket.on("leave", (routeId) => {
+    socket.leave(`route_${routeId}`);
+    console.log(`User ${socket.user.email} left route ${routeId}`);
   });
 };

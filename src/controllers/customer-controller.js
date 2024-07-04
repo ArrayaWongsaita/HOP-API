@@ -2,6 +2,15 @@ const userService = require("../services/user-service");
 
 const customerController = {};
 
+customerController.findRouteCustomer = async (req, res, next) => {
+  try {
+    const result = await userService.findUserRouteByCustomerId(req.user.id);
+    res.status(200).json({ ...result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 customerController.getCustomerInfo = async (req, res, next) => {
   try {
     const customerId = parseInt(req.params.customerId);

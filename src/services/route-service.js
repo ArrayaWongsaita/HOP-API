@@ -6,10 +6,15 @@ routeService.createNewRoute = (routeInfo) => {
 };
 
 // rider accept the ride request
-routeService.acceptRoute = (routeId, riderId, pickupTime) => {
+routeService.acceptRoute = (routeId, riderId, riderLat, riderLng) => {
   return prisma.route.update({
     where: { id: routeId },
-    data: { riderId: riderId, status: "ACCEPTED", pickupTime: pickupTime },
+    data: {
+      status: "ACCEPTED",
+      riderId,
+      riderLat,
+      riderLng,
+    },
   });
 };
 
@@ -54,7 +59,10 @@ routeService.finishRoute = (routeId) => {
 };
 
 routeService.getAllRoute = () => {
-  return prisma.route.findMany({ where: { status: "PENDING" } ,orderBy: { id: "desc" }});
+  return prisma.route.findMany({
+    where: { status: "PENDING" },
+    orderBy: { id: "desc" },
+  });
 };
 
 routeService.cancelRoute = (routeId) => {
@@ -63,5 +71,10 @@ routeService.cancelRoute = (routeId) => {
     data: { status: "CANCELED" },
   });
 };
+
+routeService.findRouteByRouteId = (id) =>
+  prisma.route.findFirst({ where: { id } });
+routeService.updateStatusByRouteIdAndStatus = (id, status) =>
+  prisma.route.update({ where: { id }, data: { status } });
 
 module.exports = routeService;

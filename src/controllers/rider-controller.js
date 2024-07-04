@@ -2,6 +2,15 @@ const riderService = require("../services/rider-service");
 
 const riderController = {};
 
+riderController.findRouteRider = async (req, res, next) => {
+  try {
+    const result = await riderService.findRiderRouteByRiderId(req.user.id);
+    res.status(200).json({ ...result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 riderController.getInfoRider = async (req, res, next) => {
   try {
     const result = await riderService.findLatestSlipByRiderId(req.user.id);
