@@ -5,6 +5,8 @@ const upload = require("../middlewares/upload");
 
 const riderRouter = express.Router();
 
+riderRouter.get("/", authenticate, riderController.getInfoRider);
+riderRouter.get("/route", authenticate, riderController.findRouteRider);
 riderRouter.get("/all", authenticate, riderController.getInfoRider);
 riderRouter.get("/available", riderController.availableRider);
 riderRouter.post(

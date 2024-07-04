@@ -94,6 +94,8 @@ model Route {
   estTime Int
   riderId Int?
   pickupTime Int?
+  riderLat String?
+  riderLng String?
 
   customer User @relation(fields: [customerId], references: [id])
   rider Rider? @relation(fields: [riderId], references: [id])

@@ -2,6 +2,18 @@ const prisma = require("../models/prisma");
 
 const userService = {};
 
+userService.findUserRouteByCustomerId = (customerId) =>
+  prisma.route.findFirst({
+    where: {
+      customerId,
+      NOT: {
+        status: {
+          in: ["FINISHED", "CANCELED"],
+        },
+      },
+    },
+  });
+
 userService.createCustomer = (customerData) => {
   return prisma.user.create({ data: customerData });
 };

@@ -34,7 +34,7 @@ module.exports = chatRoute = (socket, io) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("user disconnected", socket.user.email);
     chatController.disConnect(socket);
   });
 };

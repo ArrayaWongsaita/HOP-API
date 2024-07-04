@@ -2,6 +2,18 @@ const prisma = require("../models/prisma");
 
 const riderService = {};
 
+riderService.findRiderRouteByRiderId = (riderId) =>
+  prisma.route.findFirst({
+    where: {
+      riderId,
+      NOT: {
+        status: {
+          in: ["FINISHED", "CANCELED"],
+        },
+      },
+    },
+  });
+
 riderService.createRider = (riderData) => {
   return prisma.rider.create({ data: riderData });
 };
@@ -28,7 +40,7 @@ riderService.findRiderById = (id) => {
 
 riderService.findLatestSlipByRiderId = (riderId) =>
   prisma.payment.findMany({
-    where: { riderId },
+    where: { riderId, approvedAt: { not: null } },
     orderBy: { id: "desc" },
     take: 1,
   });
