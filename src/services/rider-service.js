@@ -56,4 +56,11 @@ riderService.findAvailableRider = () => {
   });
 };
 
+riderService.submitVerification = (riderId, data) => {
+  return prisma.rider.update({
+    where: { id: riderId },
+    data,
+  });
+};
+
 module.exports = riderService;
