@@ -48,45 +48,51 @@ riderController.availableRider = async (req, res, next) => {
 };
 
 riderController.verifyRequest = async (req, res, next) => {
-  const riderId = req.user.id;
-  const { address, birthDate, idCard } = req.body;
-  const { licenseImage, profileImage, vehicleImage, vehicleRegistrationImage } =
-    req.files;
-
-  const uploadFile = async (file) => {
-    const filePath = file.path;
-    const cloudinaryUrl = await uploadService.upload(filePath);
-    fs.unlink(filePath, (error) => {
-      if (error) {
-        console.error("Error deleting file:", filePath, error);
-      }
-    }); // Delete the local file
-    return cloudinaryUrl;
-  };
-
-  const licenseImageUrl = await uploadFile(licenseImage[0]);
-  const profileImageUrl = await uploadFile(profileImage[0]);
-  const vehicleImageUrl = await uploadFile(vehicleImage[0]);
-  const vehicleRegistrationImageUrl = await uploadFile(
-    vehicleRegistrationImage[0]
-  );
-
-  const verifyData = {
-    profileImage: profileImageUrl,
-    citizenId: idCard,
-    dob: birthDate,
-    address: address,
-    driverLicense: licenseImageUrl,
-    vehiclePlate: vehicleRegistrationImageUrl,
-    vehicleImage: vehicleImageUrl,
-  };
   try {
+    // console.log("Incoming files:", req.files);
+    const riderId = req.user.id;
+    const { address, birthDate, idCard } = req.body;
+    const {
+      licenseImage,
+      profileImage,
+      vehicleImage,
+      vehicleRegistrationImage,
+    } = req.files;
+
+    const uploadFile = async (file) => {
+      const filePath = file.path;
+      const cloudinaryUrl = await uploadService.upload(filePath);
+      fs.unlink(filePath, (error) => {
+        if (error) {
+          console.error("Error deleting file:", filePath, error);
+        }
+      }); // Delete the local file
+      return cloudinaryUrl;
+    };
+
+    const licenseImageUrl = await uploadFile(licenseImage[0]);
+    const profileImageUrl = await uploadFile(profileImage[0]);
+    const vehicleImageUrl = await uploadFile(vehicleImage[0]);
+    const vehicleRegistrationImageUrl = await uploadFile(
+      vehicleRegistrationImage[0]
+    );
+
+    const verifyData = {
+      profileImage: profileImageUrl,
+      citizenId: idCard,
+      dob: birthDate,
+      address: address,
+      driverLicense: licenseImageUrl,
+      vehiclePlate: vehicleRegistrationImageUrl,
+      vehicleImage: vehicleImageUrl,
+    };
     const submittedData = await riderService.submitVerification(
       riderId,
       verifyData
     );
     res.status(200).json(submittedData);
   } catch (error) {
+    console.log(error.message);
     next(error);
   }
 };
