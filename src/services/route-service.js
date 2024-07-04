@@ -11,12 +11,15 @@ routeService.acceptRoute = (routeId, riderId, riderLat, riderLng) => {
     where: { id: routeId },
     data: {
       status: "ACCEPTED",
-      riderId,
+      rider: {
+        connect: { id: riderId }
+      },
       riderLat,
       riderLng,
     },
   });
 };
+
 
 // rider is going to the pickup point
 routeService.goingRoute = (routeId) => {
