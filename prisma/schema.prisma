@@ -40,7 +40,7 @@ model Rider {
   password String @db.VarChar(100)
   profileImage String?
   citizenId String? @db.VarChar(13)
-  dob DateTime?
+  dob String?
   address String? @db.Text
   driverLicense String?
   licensePlate String?
