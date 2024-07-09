@@ -20,7 +20,7 @@ authController.register = async (req, res, next) => {
       // console.log(existedCustomer);
 
       if (existedCustomer) {
-        res
+        return res
           .status(400)
           .json({ message: "email or phone number already in use" });
       }
@@ -28,7 +28,7 @@ authController.register = async (req, res, next) => {
       data.password = await hashService.hash(data.password);
 
       await userService.createCustomer(data);
-      res.status(201).json({ message: "User created" });
+      return res.status(201).json({ message: "User created" });
     }
 
     // For rider register
@@ -41,7 +41,7 @@ authController.register = async (req, res, next) => {
       );
 
       if (existedRider) {
-        res
+        return res
           .status(400)
           .json({ message: "email or phone number is already in use" });
       }
@@ -49,8 +49,9 @@ authController.register = async (req, res, next) => {
       data.password = await hashService.hash(data.password);
 
       await riderService.createRider(data);
-      res.status(200).json({ message: "User created" });
+      return res.status(200).json({ message: "User created" });
     }
+    res.status(400).json("Invalid role");
   } catch (error) {
     next(error);
   }
@@ -66,7 +67,7 @@ authController.login = async (req, res, next) => {
       );
 
       if (!existedCustomer) {
-        res.status(400).json({ message: "user not found" });
+        return res.status(400).json({ message: "user not found" });
       }
 
       const isMatch = await hashService.compare(
@@ -99,7 +100,7 @@ authController.login = async (req, res, next) => {
       const isMatch = await hashService.compare(data.password, user.password);
 
       if (!isMatch) {
-        res.status(400).json({ message: "invalid credentials" });
+        return res.status(400).json({ message: "invalid credentials" });
       }
 
       const accessToken = jwtService.sign({
