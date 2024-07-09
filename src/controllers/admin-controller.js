@@ -6,7 +6,7 @@ const adminController = {};
 
 adminController.getAllPending = async (req, res, next) => {
   try {
-    const pendingApprovalRiders = await riderService.getPendingRider();
+    const pendingApprovalRiders = await riderService.getAllRider();
     res.status(200).json(pendingApprovalRiders);
   } catch (error) {
     next(error);
