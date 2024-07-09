@@ -93,20 +93,41 @@ model Route {
   riderLat    String?
   riderLng    String?
 
-  customer User   @relation(fields: [customerId], references: [id])
-  rider    Rider? @relation(fields: [riderId], references: [id])
+  customer User @relation(fields: [customerId], references: [id])
+  rider Rider? @relation(fields: [riderId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUBSCRIBED
+  DENIED
 }
 
 model Payment {
   id          Int       @id @default(autoincrement())
   riderId     Int
   paymentSlip String?
-  createdAt   DateTime  @default(now()) @db.Timestamp(0)
-  approvedAt  DateTime?
-  expiredDate DateTime?
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  approvedAt DateTime? 
+  expiredDate DateTime? 
+  status PaymentStatus @default(PENDING)
+  planId Int
+
 
   rider Rider @relation(fields: [riderId], references: [id])
+  plan Subscription @relation(fields: [planId], references: [id])
 }
+
+
+model Subscription {
+  id Int @id @default(autoincrement())
+  plan String
+  price Int
+
+  payments Payment[]
+}
+
+
 
 model Chat {
   id        Int       @id @default(autoincrement())

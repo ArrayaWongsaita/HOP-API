@@ -168,4 +168,8 @@ routeService.findRouteByRouteId = async (id) => {
 routeService.updateStatusByRouteIdAndStatus = (id, status) =>
   prisma.route.update({ where: { id }, data: { status } });
 
+routeService.getAllRoutes = () => {
+  return prisma.route.findMany();
+};
+
 module.exports = routeService;

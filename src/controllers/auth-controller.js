@@ -17,7 +17,7 @@ authController.register = async (req, res, next) => {
         data.phone
       );
 
-      console.log(existedCustomer);
+      // console.log(existedCustomer);
 
       if (existedCustomer) {
         res
@@ -28,7 +28,7 @@ authController.register = async (req, res, next) => {
       data.password = await hashService.hash(data.password);
 
       await userService.createCustomer(data);
-      res.status(200).json({ message: "User created" });
+      res.status(201).json({ message: "User created" });
     }
 
     // For rider register
