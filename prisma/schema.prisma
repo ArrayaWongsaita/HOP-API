@@ -28,7 +28,8 @@ enum RiderStatus {
   PENDING
   SUBMITTED
   APPROVED
-  CANCELED
+  SUBSCRIBED
+  DENIED
 }
 
 model Rider {
@@ -101,6 +102,12 @@ model Route {
   rider Rider? @relation(fields: [riderId], references: [id])
 }
 
+enum PaymentStatus {
+  PENDING
+  SUBSCRIBED
+  DENIED
+}
+
 model Payment {
   id Int @id @default(autoincrement())
   riderId Int
@@ -108,13 +115,22 @@ model Payment {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   approvedAt DateTime? 
   expiredDate DateTime? 
+  status PaymentStatus @default(PENDING)
+  planId Int
 
 
   rider Rider @relation(fields: [riderId], references: [id])
+  plan Subscription @relation(fields: [planId], references: [id])
 }
 
 
+model Subscription {
+  id Int @id @default(autoincrement())
+  plan String
+  price Int
 
+  payments Payment[]
+}
 
 
 

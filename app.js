@@ -8,6 +8,7 @@ const errorMiddleware = require("./src/middlewares/error");
 const chatRoute = require("./src/socketIo/routes/chat-route");
 const routeRoute = require("./src/socketIo/routes/route-route");
 const riderRouter = require("./src/routes/rider-route");
+const adminRouter = require("./src/routes/admin-route");
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/customer", customerRouter);
 app.use("/rider", riderRouter);
-// app.use("/route", routeRouter);
+app.use("/admin", adminRouter);
 
 app.use(errorMiddleware);
 
