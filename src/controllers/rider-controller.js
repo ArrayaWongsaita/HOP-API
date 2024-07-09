@@ -2,6 +2,7 @@ const fs = require("fs");
 const riderService = require("../services/rider-service");
 const uploadService = require("../services/upload-service");
 const paymentService = require("../services/payment-service");
+const subscriptionService = require("../services/subscriptions-service");
 
 const riderController = {};
 
@@ -97,6 +98,7 @@ riderController.createPayment = async (req, res, next) => {
     // req = {riderId, paymentSlip}
 
     const riderId = parseInt(req.user.id); // authenticate
+    const planId = parseInt(req.body.planId);
 
     const uploadFile = async (file) => {
       const filePath = file.path;
@@ -113,11 +115,21 @@ riderController.createPayment = async (req, res, next) => {
     const paymentInfo = {
       riderId: riderId,
       paymentSlip: paymentSlipUrl,
+      planId: planId,
     };
 
     const createdPayment = await paymentService.createPayment(paymentInfo);
 
     res.status(200).json(createdPayment);
+  } catch (error) {
+    next(error);
+  }
+};
+
+riderController.getAllPlan = async (req, res, next) => {
+  try {
+    const allSubscriptionPlans = await subscriptionService.getAllPlans();
+    res.status(200).json(allSubscriptionPlans);
   } catch (error) {
     next(error);
   }

@@ -7,9 +7,9 @@ const riderRouter = express.Router();
 
 riderRouter.get("/", authenticate, riderController.getInfoRider);
 riderRouter.get("/route", authenticate, riderController.findRouteRider);
-riderRouter.get("/all", authenticate, riderController.getInfoRider);
+// riderRouter.get("/all", authenticate, riderController.getInfoRider);
 riderRouter.get("/available", riderController.availableRider);
-riderRouter.post(
+riderRouter.patch(
   "/verify",
   authenticate,
   upload.fields([
@@ -27,5 +27,7 @@ riderRouter.post(
   upload.single("paymentSlip"),
   riderController.createPayment
 );
+
+riderRouter.get("/plan", riderController.getAllPlan);
 
 module.exports = riderRouter;

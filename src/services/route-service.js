@@ -12,14 +12,13 @@ routeService.acceptRoute = (routeId, riderId, riderLat, riderLng) => {
     data: {
       status: "ACCEPTED",
       rider: {
-        connect: { id: riderId }
+        connect: { id: riderId },
       },
       riderLat,
       riderLng,
     },
   });
 };
-
 
 // rider is going to the pickup point
 routeService.goingRoute = (routeId) => {
@@ -79,5 +78,9 @@ routeService.findRouteByRouteId = (id) =>
   prisma.route.findFirst({ where: { id } });
 routeService.updateStatusByRouteIdAndStatus = (id, status) =>
   prisma.route.update({ where: { id }, data: { status } });
+
+routeService.getAllRoutes = () => {
+  return prisma.route.findMany();
+};
 
 module.exports = routeService;

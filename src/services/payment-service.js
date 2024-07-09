@@ -9,13 +9,22 @@ paymentService.createPayment = (paymentInfo) => {
 };
 
 paymentService.getAllPayment = () => {
-  return prisma.payment.findMany();
+  return prisma.payment.findMany({
+    where: { status: "PENDING" },
+  });
 };
 
-paymentService.confirmPayment = (paymentId) => {
+paymentService.confirmPayment = (paymentId, data) => {
   return prisma.payment.update({
     where: { id: paymentId },
-    data: { approvedAt: new Date() },
+    data: data,
+  });
+};
+
+paymentService.denyPayment = (paymentId) => {
+  return prisma.payment.update({
+    where: { id: paymentId },
+    data: { status: "DENIED" },
   });
 };
 
