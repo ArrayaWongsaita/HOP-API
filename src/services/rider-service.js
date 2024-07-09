@@ -68,6 +68,9 @@ riderService.getAllRider = () => {
     where: {
       status: { in: ["SUBMITTED", "DENIED", "APPROVED", "SUBSCRIBED"] },
     },
+    include: {
+      payments: true, // Including the related rider information
+    }
   });
 };
 
