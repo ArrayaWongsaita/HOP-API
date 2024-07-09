@@ -2,177 +2,180 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  // ลองข้อมูลสำหรับ User
-  const users = await prisma.user.createMany({
-    data: [
-      {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '0123456789',
-        password: 'securepassword',
-      },
-      {
-        firstName: 'Alice',
-        lastName: 'Johnson',
-        email: 'alice.johnson@example.com',
-        phone: '0123456781',
-        password: 'securepassword',
-      },
-    ],
+  // ลบข้อมูลทั้งหมดเพื่อเริ่มการ seed ใหม่
+  await prisma.message.deleteMany();
+  await prisma.chat.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.route.deleteMany();
+  await prisma.rider.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.admin.deleteMany();
+
+  // สร้าง Users
+  const user1 = await prisma.user.create({
+    data: {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      phone: '0123456789',
+      password: 'password123'
+    }
   });
 
-  // ลองข้อมูลสำหรับ Rider
-  const riders = await prisma.rider.createMany({
-    data: [
-      {
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane.smith@example.com',
-        phone: '0987654321',
-        password: 'securepassword',
-        profileImage: 'path/to/image.jpg',
-        citizenId: '1234567890123',
-        dob: new Date('1990-01-01'),
-        address: '123 Main St',
-        driverLicense: 'DL123456',
-        licensePlate: 'ABC-1234',
-        vehicleImage: 'path/to/vehicle.jpg',
-        status: 'PENDING',
-      },
-      {
-        firstName: 'Bob',
-        lastName: 'Williams',
-        email: 'bob.williams@example.com',
-        phone: '0987654322',
-        password: 'securepassword',
-        profileImage: 'path/to/image.jpg',
-        citizenId: '1234567890124',
-        dob: new Date('1985-02-01'),
-        address: '456 Another St',
-        driverLicense: 'DL123457',
-        licensePlate: 'XYZ-5678',
-        vehicleImage: 'path/to/vehicle2.jpg',
-        status: 'APPROVED',
-      },
-    ],
+  const user2 = await prisma.user.create({
+    data: {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane.smith@example.com',
+      phone: '0987654321',
+      password: 'password123'
+    }
   });
 
-  // ลองข้อมูลสำหรับ Admin
-  const admins = await prisma.admin.createMany({
-    data: [
-      {
-        firstName: 'Admin',
-        lastName: 'User',
-        email: 'admin@example.com',
-        password: 'securepassword',
-      },
-      {
-        firstName: 'Super',
-        lastName: 'Admin',
-        email: 'super.admin@example.com',
-        password: 'securepassword',
-      },
-    ],
+  // สร้าง Riders
+  const rider1 = await prisma.rider.create({
+    data: {
+      firstName: 'Mike',
+      lastName: 'Johnson',
+      email: 'mike.johnson@example.com',
+      phone: '0234567890',
+      password: 'password123',
+      status: 'PENDING'
+    }
   });
 
-  // ลองข้อมูลสำหรับ Route
-  const routes = await prisma.route.createMany({
-    data: [
-      {
-        customerId: 1,
-        status: 'PENDING',
-        pickupPlace: '123 Main St',
-        pickupLat: '13.736717',
-        pickupLng: '100.523186',
-        desPlace: '456 Another St',
-        desLat: '13.756331',
-        desLng: '100.501762',
-        rideFare: 150.50,
-        distance: 10.5,
-        estTime: 20,
-        riderId: 1,
-      },
-      {
-        customerId: 2,
-        status: 'ACCEPTED',
-        pickupPlace: '789 Third St',
-        pickupLat: '13.746717',
-        pickupLng: '100.533186',
-        desPlace: '012 Fourth St',
-        desLat: '13.766331',
-        desLng: '100.511762',
-        rideFare: 200.75,
-        distance: 15.0,
-        estTime: 30,
-        riderId: 2,
-      },
-    ],
+  const rider2 = await prisma.rider.create({
+    data: {
+      firstName: 'Emily',
+      lastName: 'Davis',
+      email: 'emily.davis@example.com',
+      phone: '0345678901',
+      password: 'password123',
+      status: 'PENDING'
+    }
   });
 
-  // ลองข้อมูลสำหรับ Payment
-  const payments = await prisma.payment.createMany({
-    data: [
-      {
-        riderId: 1,
-        paymentSlip: 'path/to/payment_slip1.jpg',
-        approvedAt: new Date(),
-        expiredDate: new Date('2024-07-11'),
-      },
-      {
-        riderId: 2,
-        paymentSlip: 'path/to/payment_slip2.jpg',
-        approvedAt: new Date(),
-        expiredDate: new Date('2024-07-15'),
-      },
-    ],
+  // สร้าง Admins
+  const admin1 = await prisma.admin.create({
+    data: {
+      firstName: 'Admin',
+      lastName: 'One',
+      email: 'admin.one@example.com',
+      password: 'adminpassword'
+    }
   });
 
-  // ลองข้อมูลสำหรับ Chat
-  const chats = await prisma.chat.createMany({
-    data: [
-      {
-        userId: 1,
-        riderId: 1,
-        adminId: 1,
-        senderBy: 'USER',
-      },
-      {
-        userId: 2,
-        riderId: 2,
-        adminId: 2,
-        senderBy: 'RIDER',
-      },
-    ],
+  // สร้าง Routes
+  const route1 = await prisma.route.create({
+    data: {
+      customerId: user1.id,
+      status: 'PENDING',
+      pickupPlace: '123 Main St',
+      pickupLat: '12.34',
+      pickupLng: '56.78',
+      desPlace: '456 Elm St',
+      desLat: '23.45',
+      desLng: '67.89',
+      rideFare: 100.0,
+      distance: 10.0,
+      estTime: 15
+    }
   });
 
-  // ลองข้อมูลสำหรับ Message
-  const messages = await prisma.message.createMany({
-    data: [
-      {
-        chatId: 1,
-        senderRole: 'USER',
-        content: 'Hello, this is a test message from user',
-      },
-      {
-        chatId: 1,
-        senderRole: 'RIDER',
-        content: 'Hi there, this is a reply from rider',
-      },
-      {
-        chatId: 2,
-        senderRole: 'RIDER',
-        content: 'Hello, this is another test message from rider',
-      },
-      {
-        chatId: 2,
-        senderRole: 'ADMIN',
-        content: 'Hello, this is a message from admin',
-      },
-    ],
+  const route2 = await prisma.route.create({
+    data: {
+      customerId: user2.id,
+      status: 'PENDING',
+      pickupPlace: '789 Oak St',
+      pickupLat: '34.56',
+      pickupLng: '78.90',
+      desPlace: '012 Pine St',
+      desLat: '45.67',
+      desLng: '89.01',
+      rideFare: 200.0,
+      distance: 20.0,
+      estTime: 30
+    }
   });
 
-  console.log('Data seeding completed.');
+  // สร้าง Payments
+  const payment1 = await prisma.payment.create({
+    data: {
+      riderId: rider1.id,
+      paymentSlip: 'paymentSlip1.png',
+      createdAt: new Date(),
+      approvedAt: new Date(),
+      expiredDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+    }
+  });
+
+  const payment2 = await prisma.payment.create({
+    data: {
+      riderId: rider2.id,
+      paymentSlip: 'paymentSlip2.png',
+      createdAt: new Date(),
+      approvedAt: new Date(),
+      expiredDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+    }
+  });
+
+  // สร้าง Chats
+  const chat1 = await prisma.chat.create({
+    data: {
+      userId: user1.id,
+      riderId: rider1.id,
+      adminId: admin1.id,
+      senderBy: 'user'
+    }
+  });
+
+  const chat2 = await prisma.chat.create({
+    data: {
+      userId: user2.id,
+      riderId: rider2.id,
+      adminId: admin1.id,
+      senderBy: 'rider'
+    }
+  });
+
+  // สร้าง Messages
+  await prisma.message.create({
+    data: {
+      chatId: chat1.id,
+      senderRole: 'USER',
+      content: 'Hello, I am user1.',
+      createdAt: new Date()
+    }
+  });
+
+  await prisma.message.create({
+    data: {
+      chatId: chat1.id,
+      senderRole: 'RIDER',
+      content: 'Hello, I am rider1.',
+      createdAt: new Date()
+    }
+  });
+
+  await prisma.message.create({
+    data: {
+      chatId: chat2.id,
+      senderRole: 'USER',
+      content: 'Hello, I am user2.',
+      createdAt: new Date()
+    }
+  });
+
+  await prisma.message.create({
+    data: {
+      chatId: chat2.id,
+      senderRole: 'RIDER',
+      content: 'Hello, I am rider2.',
+      createdAt: new Date()
+    }
+  });
+
+  console.log('Seed data created successfully.');
 }
 
 main()

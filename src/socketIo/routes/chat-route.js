@@ -2,12 +2,12 @@ const chatController = require("../controllers/chat-controller");
 
 module.exports = chatRoute = (socket, io) => {
   socket.on("getListChat", (data) => {
-    console.log("---- getListChat -------");
+    console.log(`---- getListChat -------`);
     chatController.getListChat(socket, data);
   });
 
   socket.on("joinChat", ({ chatId }) => {
-    console.log("---- joinChat -------");
+    console.log(`----${socket.user.email} joinChat id ${chatId} -------`);
     chatController.joinChat(socket, chatId);
   });
 
@@ -37,4 +37,12 @@ module.exports = chatRoute = (socket, io) => {
     console.log("user disconnected", socket.user.email);
     chatController.disConnect(socket);
   });
+
+
+socket.on("leaveChat", ({chatId}) => {
+  socket.leave(`chat_${chatId}`);
+  console.log(`User ${socket.user.email} left Chat = ${chatId}`);
+});
+
+
 };

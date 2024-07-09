@@ -26,8 +26,8 @@ module.exports = routeRouter = (socket, io) => {
   });
 
   // finish confirmation by rider
-  socket.on("finishRoute", ({ routeId }) => {
-    routeController.finishRoute(io, socket, routeId);
+  socket.on("finishRoute", (data) => {
+    routeController.finishRoute(io, socket, data);
   });
 
   socket.on("updateRouteStatus", (data) => {
@@ -44,7 +44,7 @@ module.exports = routeRouter = (socket, io) => {
     routeController.requestRouteHistory(socket, routeId);
   });
 
-  socket.on("leave", (routeId) => {
+  socket.on("leaveRoute", ({routeId}) => {
     socket.leave(`route_${routeId}`);
     console.log(`User ${socket.user.email} left route ${routeId}`);
   });
