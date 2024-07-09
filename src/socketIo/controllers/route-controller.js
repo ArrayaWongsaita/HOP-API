@@ -41,29 +41,49 @@ routeController.cancelRoute = async (io, socket, routeId) => {
 
 routeController.acceptRoute = async (io, socket, data) => {
   try {
+    console.log(`${socket.user.email} req acceptRoute `)
     const riderId = socket.user.id;
-    const { routeId, riderLat, riderLng } = data;
+    const { routeId, riderLat, riderLng, customerId } = data;
     socket.join(`route_${routeId}`);
-
-    const acceptedRoute = await routeService.acceptRoute(
+    if(!routeId ||
+      !riderId ||
+      !customerId ||
+      !riderLat ||
+      !riderLng ) { 
+        console.log("routeId = ", routeId)
+        console.log("riderId = ", riderId)
+        console.log("customerId = ", customerId)
+        console.log("riderLat = ", riderLat)
+        console.log("riderLng = ", riderLng)
+        console.log("data = ",data)
+        return console.log("error acceptRoute")
+      }
+    const acceptedRoute = await routeService.updateRouteToAcceptedByRouteIdRiderIdRiderLatAndRiderLng(
       routeId,
       riderId,
       riderLat + "",
-      riderLng + ""
+      riderLng + "",
     );
+    if(acceptedRoute.status === "PENDING") {
+      return
+    }
+    const chat = await routeService.createChatByCustomerIdAndRiderId(customerId ,    riderId)
+    acceptedRoute.chatInfo = chat
     io.emit("routeStatusChanged", acceptedRoute);
     io.to(`route_${routeId}`).emit("routeHistory", acceptedRoute);
   } catch (error) {
-    console.log(error);
+    console.log("error rout-controller acceptRoute ",error);
   }
 };
 
-routeController.finishRoute = async (io, socket, routeId) => {
+routeController.finishRoute = async (io, socket, data) => {
   try {
-    const finishedRoute = await routeService.finishRoute(routeId);
-    io.to(`route_${routeId}`).emit("routeHistory", finishedRoute);
+    const order = {...data}
+    console.log(order)
+    const finishedRoute = await routeService.finishRoute(order);
+    io.to(`route_${finishedRoute.id}`).emit("routeHistory", finishedRoute);
   } catch (error) {
-    next(error);
+    console.log(error)
   }
 };
 

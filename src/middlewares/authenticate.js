@@ -4,6 +4,7 @@ const riderService = require("../services/rider-service");
 const userService = require("../services/user-service");
 
 const authenticate = async (req, res, next) => {
+  try {
   const authorization = req.headers.authorization;
   if (!authorization || !authorization.startsWith("Bearer ")) {
     res.status(401).json({ message: "unauthorized access" });
@@ -11,7 +12,6 @@ const authenticate = async (req, res, next) => {
 
   const accessToken = authorization.split(" ")[1];
   const payload = jwtService.verify(accessToken);
-  try {
     // Check if customer
     if (payload.user.role === "customer") {
       const user = await userService.findCustomerById(payload.user.id);
