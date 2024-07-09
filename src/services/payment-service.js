@@ -9,9 +9,7 @@ paymentService.createPayment = (paymentInfo) => {
 };
 
 paymentService.getAllPayment = () => {
-  return prisma.payment.findMany({
-    where: { status: "PENDING" },
-  });
+  return prisma.payment.findMany();
 };
 
 paymentService.confirmPayment = (paymentId, data) => {
