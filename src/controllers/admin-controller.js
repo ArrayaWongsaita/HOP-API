@@ -16,7 +16,7 @@ adminController.getAllPending = async (req, res, next) => {
 adminController.approveRider = async (req, res, next) => {
   try {
     const riderId = parseInt(req.body.riderId);
-    const status = res.body.status;
+    const status = req.body.status;
 
     if (status === "APPROVED") {
       const approvedRider = await riderService.approveStatus(riderId);
@@ -40,37 +40,41 @@ adminController.confirmPayment = async (req, res, next) => {
     const status = req.body.status;
     const planId = parseInt(req.body.planId);
 
+    let expiredDate ;
+
     if (status === "CONFIRMED") {
       const now = new Date();
       if (planId == 1) {
         const next30Days = now.getTime() + 30 * 24 * 60 * 60 * 1000;
-        const expiredDate = new Date(next30Days);
-        return expiredDate;
+        expiredDate = new Date(next30Days);
       } else if (planId == 2) {
         const next90Days = now.getTime() + 90 * 24 * 60 * 60 * 1000;
-        const expiredDate = new Date(next90Days);
-        return expiredDate;
+         expiredDate = new Date(next90Days);
+
       } else if (planId == 3) {
         const next180Days = now.getTime() + 180 * 24 * 60 * 60 * 1000;
-        const expiredDate = new Date(next180Days);
-        return expiredDate;
+         expiredDate = new Date(next180Days);
+
       } else if (planId == 4) {
         const next270Days = now.getTime() + 270 * 24 * 60 * 60 * 1000;
-        const expiredDate = new Date(next270Days);
-        return expiredDate;
+         expiredDate = new Date(next270Days);
+
       } else if (planId == 5) {
         const next360Days = now.getTime() + 360 * 24 * 60 * 60 * 1000;
-        const expiredDate = new Date(next360Days);
-        return expiredDate;
+         expiredDate = new Date(next360Days);
+
       } else {
         res.status(400).json({ message: "Invalid planId" });
       }
+      console.log("test ")
 
       const paymentData = {
-        approvedDate: now,
+        approvedAt: now,
         expiredDate: expiredDate,
         status: "SUBSCRIBED",
       };
+
+      console.log(paymentData)
 
       const confirmedPayment = await paymentService.confirmPayment(
         paymentId,
@@ -88,6 +92,7 @@ adminController.confirmPayment = async (req, res, next) => {
 
     res.status(400).json({ message: "Invalid status" });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
