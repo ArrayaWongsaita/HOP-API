@@ -69,6 +69,7 @@ routeController.acceptRoute = async (io, socket, data) => {
     }
     const chat = await routeService.createChatByCustomerIdAndRiderId(customerId ,    riderId)
     acceptedRoute.chatInfo = chat
+    acceptedRoute.riderInfo = socket.user
     io.emit("routeStatusChanged", acceptedRoute);
     io.to(`route_${routeId}`).emit("routeHistory", acceptedRoute);
   } catch (error) {
