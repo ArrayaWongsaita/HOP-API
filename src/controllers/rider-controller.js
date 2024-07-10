@@ -85,7 +85,7 @@ riderController.verifyRequest = async (req, res, next) => {
       dob: birthDate,
       address: address,
       driverLicense: licenseImageUrl,
-      vehiclePlate: vehicleRegistrationImageUrl,
+      licensePlate: vehicleRegistrationImageUrl,
       vehicleImage: vehicleImageUrl,
     };
     const submittedData = await riderService.submitVerification(
