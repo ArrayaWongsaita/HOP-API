@@ -156,6 +156,10 @@ routeService.findRouteByRouteId = async (id) => {
         userId: route.customerId,
         riderId: route.riderId,
       },
+      include: {
+        rider: true,
+        user: true
+      }
     });
 
     // เพิ่มข้อมูล chat เข้าไปใน route ก่อนส่งออก
