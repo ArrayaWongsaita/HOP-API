@@ -80,6 +80,7 @@ riderController.verifyRequest = async (req, res, next) => {
     );
 
     const verifyData = {
+      status: "SUBMITTED",
       profileImage: profileImageUrl,
       citizenId: idCard,
       dob: birthDate,

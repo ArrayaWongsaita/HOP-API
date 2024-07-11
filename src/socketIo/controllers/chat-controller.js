@@ -2,6 +2,40 @@ const chatService = require("../../services/chat-service");
 
 
 const chatController = {};
+
+chatController.chatToAdmin = async (socket,io) => {
+  try {
+    console.log(socket.user.role)
+    if(socket.user.role === "CUSTOMER"){
+
+      let chatInfo = await chatService.findChatUserAndAdminIdByUserId(socket.user.id)
+      if(!chatInfo){
+        input = {
+          userId:socket.user.id,
+          adminId: 1
+        }
+        chatInfo = await chatService.createChatToAdminByUserIdOrRiderId(input)
+      }
+      socket.join(`chat_${chatInfo.id}`);
+      io.emit("newChatToAdmin",chatInfo)
+      socket.emit("chatAdminInfo", chatInfo)
+    } else {
+      let chatInfo = await chatService.findChatUserAndAdminIdByRiderId(socket.user.id)
+      if(!chatInfo){
+        input = {
+          riderId:socket.user.id,
+          adminId: 1
+        }
+        chatInfo = await chatService.createChatToAdminByUserIdOrRiderId(input)
+      }
+      socket.join(`chat_${chatInfo.id}`);
+      io.emit("newChatToAdmin",chatInfo)
+      socket.emit("chatAdminInfo", chatInfo)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 //====================== JOIN CHAT =======================
 chatController.joinChat = async (socket, chatId) => {
   try {
@@ -64,6 +98,31 @@ chatController.senMessage = async (
       senderRole
     );
     io.to(`chat_${chatId}`).emit("newMessage", message);
+  } catch (error) {
+    console.error("Error creating message:", error);
+  }
+};
+chatController.senMessageAdmin = async (
+  io,
+  socket,
+  chatId,
+  senderId,
+  content,
+  senderRole
+) => {
+  try {
+    console.log(
+      `Received message from ${senderRole} id ${senderId} in chat ${chatId}: ${content}`
+    );
+    const message = await chatService.createMessageByChatIdSenderIdAndContent(
+      chatId,
+      senderId,
+      content,
+      senderRole
+    );
+    console.log(`send to chat_${chatId} message = `,message)
+    io.to(`chat_${chatId}`).emit("newMessageAdmin", message);
+    io.emit("newAdminMessage",message)
   } catch (error) {
     console.error("Error creating message:", error);
   }

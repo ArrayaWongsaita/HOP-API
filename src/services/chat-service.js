@@ -2,6 +2,12 @@ const prisma = require("../models/prisma");
 
 const chatService = {};
 
+chatService.getChatAdminAndMessages = () =>
+  prisma.chat.findMany({
+    where: { adminId: { not: null } },
+    include: { messages: true, rider: true, user: true },
+  });
+
 chatService.findChatListByAdminId = (adminId) =>
   prisma.chat.findMany({ where: { adminId } });
 chatService.findChatListByRiderId = (riderId) =>
@@ -14,6 +20,28 @@ chatService.findMessageByChatId = (chatId) =>
     where: { chatId },
     orderBy: { createdAt: "asc" },
   });
+
+chatService.createChatToAdminByUserIdOrRiderId = (data) =>
+  prisma.chat.create({ data });
+
+chatService.findChatUserAndAdminIdByUserId = (userId) => {
+  return prisma.chat.findFirst({
+    where: {
+      userId: userId,
+      adminId: { not: null },
+    },
+    include: { messages: true },
+  });
+};
+chatService.findChatUserAndAdminIdByRiderId = (riderId) => {
+  return prisma.chat.findFirst({
+    where: {
+      riderId,
+      adminId: { not: null },
+    },
+    include: { messages: true },
+  });
+};
 
 chatService.createMessageByChatIdSenderIdAndContent = (
   chatId,

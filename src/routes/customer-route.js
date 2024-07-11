@@ -5,6 +5,7 @@ const authenticate = require("../middlewares/authenticate");
 const customerRouter = express.Router();
 
 // Customer Profile
+customerRouter.get("/route/history", authenticate, customerController.getRouteHistory)
 customerRouter.get("/route", authenticate, customerController.findRouteCustomer);
 customerRouter.get("/:customerId", customerController.getCustomerInfo);
 customerRouter.patch("/:customerId", customerController.updateCustomerInfo);

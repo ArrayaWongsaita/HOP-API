@@ -22,6 +22,17 @@ module.exports = chatRoute = (socket, io) => {
       senderRole
     );
   });
+  socket.on("sendMessageAdmin", ({ chatId, senderId, content, senderRole }) => {
+    console.log("---- sendMessageAdmin -------");
+    chatController.senMessageAdmin(
+      io,
+      socket,
+      chatId,
+      senderId,
+      content,
+      senderRole
+    );
+  });
 
   socket.on("typing", ({ chatId, role }) => {
     console.log("---- typing -------");
@@ -43,6 +54,10 @@ socket.on("leaveChat", ({chatId}) => {
   socket.leave(`chat_${chatId}`);
   console.log(`User ${socket.user.email} left Chat = ${chatId}`);
 });
+
+socket.on("chatToAdmin", ()=>{
+  chatController.chatToAdmin(socket,io)
+})
 
 
 };
