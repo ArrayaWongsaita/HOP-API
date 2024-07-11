@@ -1,3 +1,4 @@
+const chatService = require("../services/chat-service");
 const paymentService = require("../services/payment-service");
 const riderService = require("../services/rider-service");
 const routeService = require("../services/route-service");
@@ -101,6 +102,14 @@ adminController.getAllPayments = async (req, res, next) => {
   try {
     const allPayments = await paymentService.getAllPayment();
     res.status(200).json(allPayments);
+  } catch (error) {
+    next(error);
+  }
+};
+adminController.getAllChatInfo= async (req, res, next) => {
+  try {
+    const chatInfo = await chatService.getChatAdminAndMessages()
+    res.status(200).json(chatInfo);
   } catch (error) {
     next(error);
   }

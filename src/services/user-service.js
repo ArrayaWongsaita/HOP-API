@@ -2,6 +2,15 @@ const prisma = require("../models/prisma");
 
 const userService = {};
 
+userService.getRouteHistory = (customerId) => {
+  return prisma.route.findMany({
+    where: { customerId },
+    orderBy: { id: 'desc' },
+    take: 5
+  });
+};
+
+
 userService.findUserRouteByCustomerId = (customerId) =>
   prisma.route.findFirst({
     where: {

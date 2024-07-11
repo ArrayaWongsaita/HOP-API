@@ -1,11 +1,7 @@
 const prisma = require("../models/prisma");
 const routeService = {};
 
-// process.on("exit", async () => {
-//   console.log("Disconnecting Prisma...");
-//   await prisma.$disconnect();
-//   console.log("Prisma disconnected");
-// });
+
 routeService.createNewRoute = (routeInfo) => {
   return prisma.route.create({ data: routeInfo });
 };
@@ -36,41 +32,6 @@ routeService.createChatByCustomerIdAndRiderId = (customerId, riderId) =>
     },
   });
 
-// routeService.acceptRoute = (routeId, riderId, customerId, riderLat, riderLng) =>  prisma.$transaction(async (tx) => {
-//     // Update the route status and connect rider
-//     try {
-//       const acceptedRoute = await tx.route.update({
-//         where: { id: routeId },
-//         data: {
-//           status: "ACCEPTED",
-//           rider: {
-//             connect: { id: riderId },
-//           },
-//           riderLat,
-//           riderLng,
-//         },
-//       });
-//       console.log("---------------------------------------------------")
-//       console.log(`Route id = ${acceptedRoute.id} Create a chat between customer id = ${acceptedRoute.customerId} and rider id = ${acceptedRoute.riderId} `)
-//       // Create a chat between customer and rider
-//       if(acceptedRoute.status ===  "ACCEPTED"){
-
-//         const createChat = await tx.chat.create({
-//           data: {
-//             userId: customerId,
-//             riderId: riderId,
-//           },
-//         });
-//         acceptedRoute.chatInfo = createChat;
-//         console.log("output = ",createChat )
-//       }
-//       console.log("---------------------------------------------------")
-
-//       return acceptedRoute;
-//     } catch (error) {
-//       console.log("error prisma.$transaction",error)
-//     }
-//   });
 
 // rider is going to the pickup point
 routeService.goingRoute = (routeId) => {
@@ -145,9 +106,12 @@ routeService.cancelRoute = (routeId) => {
 };
 
 routeService.findRouteByRouteId = async (id) => {
-  console.log("====================get route========================", id);
-  // หา route ที่มี id ตรงกับ id ที่ส่งมา
-  const route = await prisma.route.findFirst({ where: { id } });
+
+  const route = await prisma.route.findFirst({ where: { id },
+    include: {
+    rider: true,
+    customer:true
+  } });
 
   if (route) {
     // หา chat ที่มี userId และ riderId ตรงกับ customerId และ riderId ของ route
@@ -155,11 +119,8 @@ routeService.findRouteByRouteId = async (id) => {
       where: {
         userId: route.customerId,
         riderId: route.riderId,
-      },
-      include: {
-        rider: true,
-        user: true
       }
+      
     });
 
     // เพิ่มข้อมูล chat เข้าไปใน route ก่อนส่งออก

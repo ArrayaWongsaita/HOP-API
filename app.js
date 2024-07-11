@@ -24,7 +24,6 @@ app.use("/admin", adminRouter);
 app.use(errorMiddleware);
 
 const socketIO = (socket, io) => {
-  // console.log("socket--------")
   socket.onAny((event, ...args) => {
     console.log(`Received event: ${event}`);
     console.log("With arguments:", args);
