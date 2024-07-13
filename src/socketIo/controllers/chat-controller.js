@@ -16,6 +16,7 @@ chatController.chatToAdmin = async (socket,io) => {
         }
         chatInfo = await chatService.createChatToAdminByUserIdOrRiderId(input)
       }
+      chatInfo.user = socket.user
       socket.join(`chat_${chatInfo.id}`);
       io.emit("newChatToAdmin",chatInfo)
       socket.emit("chatAdminInfo", chatInfo)
@@ -28,6 +29,7 @@ chatController.chatToAdmin = async (socket,io) => {
         }
         chatInfo = await chatService.createChatToAdminByUserIdOrRiderId(input)
       }
+      chatInfo.rider = socket.user
       socket.join(`chat_${chatInfo.id}`);
       io.emit("newChatToAdmin",chatInfo)
       socket.emit("chatAdminInfo", chatInfo)
@@ -131,6 +133,7 @@ chatController.senMessageAdmin = async (
 chatController.deleteChatHistory = async (socket, chatId) => {
   try {
     await chatService.deleteChatHistoryByChatId(chatId);
+    await chatService.deleteChatByChatId(chatId)
     console.log("delete all message chatId", chatId, " =  ", []);
     // io.to(`chat_${chatId}`).emit('newMessage', 'delete');
     socket.to(`chat_${chatId}`).emit("chatHistory", []); /// ส่งประวัติแชทที่ว่างเปล่ากลับไปยังลูกค้า
