@@ -56,6 +56,7 @@ chatService.createMessageByChatIdSenderIdAndContent = (
       senderRole,
     },
   });
+chatService.deleteChatByChatId = (id) => prisma.chat.delete({where:{id}})
 chatService.deleteChatHistoryByChatId = (chatId) =>
   prisma.message.deleteMany({
     where: { chatId },

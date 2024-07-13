@@ -1,9 +1,32 @@
+const { json } = require("express");
 const chatService = require("../services/chat-service");
 const paymentService = require("../services/payment-service");
 const riderService = require("../services/rider-service");
 const routeService = require("../services/route-service");
+const userService = require("../services/user-service");
+const { message } = require("../models/prisma");
 
 const adminController = {};
+
+adminController.getRouteInfo = async (req, res, next ) => {
+  try {
+    const {role = null,id = null} = req.params
+    if(!role || !id){
+      return  res.status(400).json({message:"Role or id is not define"})
+    }
+    let routeInfo = {}
+    if(role === "RIDER"){
+      routeInfo = await riderService.findRiderRouteAndUserAndRiderDetailByRiderId(+id);
+    }
+    if(role === "USER"){
+      routeInfo = await userService.findUserRouteAndUserAndRiderDetailByCustomerId(+id);
+    }
+    res.status(200).json(routeInfo)
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
 
 adminController.getAllPending = async (req, res, next) => {
   try {

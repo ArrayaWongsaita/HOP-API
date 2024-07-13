@@ -13,6 +13,21 @@ riderService.findRiderRouteByRiderId = (riderId) =>
       },
     },
   });
+riderService.findRiderRouteAndUserAndRiderDetailByRiderId = (riderId) =>
+  prisma.route.findFirst({
+    where: {
+      riderId,
+      NOT: {
+        status: {
+          in: ["FINISHED", "CANCELED"],
+        },
+      },
+    },
+    include:{
+      rider:true,
+      customer:true
+    }
+  });
 
 riderService.createRider = (riderData) => {
   return prisma.rider.create({ data: riderData });
@@ -69,7 +84,7 @@ riderService.getAllRider = () => {
       status: { in: ["SUBMITTED", "DENIED", "APPROVED", "SUBSCRIBED"] },
     },
     include: {
-      payments: true, // Including the related rider information
+      payments: true, 
     }
   });
 };
