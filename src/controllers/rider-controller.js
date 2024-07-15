@@ -18,8 +18,8 @@ riderController.findRouteRider = async (req, res, next) => {
 riderController.getInfoRider = async (req, res, next) => {
   try {
     const result = await riderService.findLatestSlipByRiderId(req.user.id);
-    if (result.length < 0) {
-      return res.status(404).json({ message: "No slip found" });
+    if (result.length < 1) {
+      return res.status(204).json({ message: "No slip found" });
     }
     const currentDate = new Date();
     const expirationDate = new Date(result[0].expiredDate);
