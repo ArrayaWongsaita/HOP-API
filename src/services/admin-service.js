@@ -5,7 +5,7 @@ const adminService = {};
 adminService.findAdminByEmailOrPhone = (emailOrPhone) => {
   return prisma.admin.findFirst({
     where: {
-      OR: [{ email: emailOrPhone }, { mobile: emailOrPhone }],
+     email: emailOrPhone 
     },
   });
 };
