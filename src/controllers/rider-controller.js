@@ -108,7 +108,7 @@ riderController.createPayment = async (req, res, next) => {
     const planId = parseInt(req.body.planId);
 
     const uploadFile = async (file) => {
-      const filePath = file.path;
+      const filePath = file;
       const cloudinaryUrl = await uploadService.upload(filePath);
       fs.unlink(filePath, (error) => {
         if (error) {
